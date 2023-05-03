@@ -10,22 +10,24 @@ import Container from "@mui/material/Container";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { LinkInfo } from "shared/types";
-import { StyledLink } from "shared";
+import { LoadingSpinner, StyledLink } from "shared";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
+import { useIsFetching } from "react-query";
 
 const links: Array<LinkInfo> = [
   { label: "Welcome", path: "/" },
-  { label: "Users dashboard", path: "/users-dashboard" },
+  { label: "Users Review", path: "/users" },
+  { label: "Products", path: "/products" },
   { label: "About us", path: "/about" },
 ];
 const accountLinks: Array<LinkInfo> = [{ label: "Login", path: "/login" }];
 
 function AppLayout() {
+  const isFetching = useIsFetching();
   const { pathname } = useLocation();
-  const [anchorElNavMenu, setAnchorElNavMenu] = React.useState<null | HTMLElement>(
-    null
-  );
+  const [anchorElNavMenu, setAnchorElNavMenu] =
+    React.useState<null | HTMLElement>(null);
   const [anchorElAccount, setAnchorElAccount] =
     React.useState<null | HTMLElement>(null);
 
@@ -170,14 +172,13 @@ function AppLayout() {
               {links.map((link, index) =>
                 index !== 0 ? (
                   <StyledLink
+                    key={index}
                     to={link.path}
                     isactive={pathname === link.path ? "active" : "inActive"}
                   >
                     {link.label}
                   </StyledLink>
-                ) : (
-                  <></>
-                )
+                ) : null
               )}
             </Box>
 
@@ -208,6 +209,7 @@ function AppLayout() {
                 {accountLinks.map((link, index) => (
                   <MenuItem key={index} onClick={handleCloseAccountMenu}>
                     <StyledLink
+                      key={index}
                       to={link.path}
                       isactive={pathname === link.path ? "active" : "inActive"}
                     >
@@ -220,7 +222,8 @@ function AppLayout() {
           </Toolbar>
         </Container>
       </AppBar>
-      <main style={{ margin: "10px" }}>
+      {isFetching ? <LoadingSpinner /> : null}
+      <main style={{ margin: "10px", position: "relative" }}>
         <Outlet />
       </main>
     </>
