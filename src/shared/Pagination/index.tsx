@@ -1,5 +1,4 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
-import { startTransition } from "react";
+import { Box, Button, Typography } from "@mui/material";
 
 type PaginationProps = {
   currentPage: number;
@@ -37,10 +36,9 @@ const Pagination = ({
           value={itemsPerPage}
           name="itemsperpage"
           type="number"
+          min={1}
           onChange={(e) => {
-            // startTransition(() => {
               setItemsPerPage(Number(e.target.value));
-            // });
           }}
           style={{ width: "50px" }}
         />
@@ -49,9 +47,7 @@ const Pagination = ({
       <Button
         disabled={currentPage >= pageNumber}
         onClick={() => {
-          // startTransition(() => {
             setPage((p) => p + 1);
-          // });
         }}
       >
         Next page
