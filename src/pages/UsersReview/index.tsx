@@ -1,89 +1,95 @@
 import { Box, Grid } from "@mui/material";
-import {
-  useDeferredValue,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { useQueryClient } from "react-query";
-import { Pagination, UserCard } from "shared";
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { LoadingSpinner, Pagination, UserCard } from "shared";
 import { User } from "shared/types";
 import UserPosts from "./views/UserPostes";
-import { queryKeys } from "utils/reactQuery/queryKeys";
 import { useDebounce } from "shared/hooks";
 import { useUsers } from "pages/hooks";
-import { getUsers } from "actions";
+import React from "react";
 const postsNumber = 10; // This value should be taken from the backend (In the first response form the backend)
 
 const UsersReview = () => {
   const [selectedUser, setSelectedUser] = useState<User>();
   const postRef = useRef<any>(null);
   //pagination
-  const [page, setPage] = useState<number>(1);
   const [itemsPerPage, setItemsPerPage] = useState<number>(4);
-  const itemsPerPageValue = useDeferredValue(itemsPerPage);
+  const deferredItemsPerPage = useDeferredValue(itemsPerPage);
+  const [currentPage, setPage] = useState<number>(1);
+  const deferredCurrentPage = useDeferredValue(currentPage);
   const pageNumber = useMemo(
-    () => Math.ceil(postsNumber / itemsPerPageValue),
-    [itemsPerPageValue]
+    () => Math.ceil(postsNumber / deferredItemsPerPage),
+    [deferredItemsPerPage]
   );
 
   const {
     data: users,
     isLoading,
-    refetch,
-  } = useUsers(page.toString(), itemsPerPageValue.toString());
+    refetch
+  } = useUsers(deferredCurrentPage.toString(), deferredItemsPerPage.toString());
 
   const debounce = useDebounce();
   useEffect(() => {
     setPage(1);
     debounce(() => refetch(), 200);
-  }, [itemsPerPageValue, refetch]);
+  }, [deferredItemsPerPage, refetch]);
   //
 
   //Pre-fetching
-  const queryClient = useQueryClient();
-  useEffect(() => {
-    if (page <= pageNumber) {
-      const nextPage = page + 1;
-      queryClient.prefetchQuery<Array<User>>(
-        [queryKeys.getUsers, nextPage],
-        () => getUsers(nextPage.toString(), itemsPerPageValue.toString())
-      );
-    }
-  }, [itemsPerPageValue, page, pageNumber, queryClient]);
+  // const queryClient = useQueryClient();
+  // useEffect(() => {
+  //   if (deferredCurrentPage <= pageNumber) {
+  //     const nextPage = deferredCurrentPage + 1;
+  //     queryClient.prefetchQuery<Array<User>>(
+  //       [queryKeys.getUsers, nextPage],
+  //       () => getUsers(nextPage.toString(), deferredItemsPerPage.toString())
+  //     );
+  //   }
+  // }, [deferredItemsPerPage, deferredCurrentPage, pageNumber, queryClient]);
   //
 
   const handleCardClick = (id: number) => {
     setSelectedUser((users || []).filter((item) => item.id === id)[0]);
     if (postRef.current) postRef.current?.scrollUp();
   };
-
+console.log(`currentPage=${currentPage}   deferredCurrentPage=${deferredCurrentPage}`)
+console.log(`itemsPerPage=${itemsPerPage}   deferredItemsPerPage=${deferredItemsPerPage}`)
   return (
-    <Grid container sx={{height:'88vh'}}>
-      <Grid item xs={12} md={8} >
+    <Grid container sx={{ height: "88vh" }}>
+      <Grid item xs={12} md={8}>
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
-            justifyContent:'space-between',
-            height:'100%'
+            justifyContent: "space-between",
+            height: "100%",
           }}
         >
           <Box
-            sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap", overflowY:'auto', height:'80vh' }}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              flexWrap: "wrap",
+              overflowY: "auto",
+              height: "80vh",
+            }}
           >
-            {(users || []).map((userInfo) => (
-              <UserCard
-                key={userInfo.id}
-                userInfo={userInfo}
-                onCardClick={handleCardClick}
-              ></UserCard>
-            ))}
+            {isLoading || (currentPage!==deferredCurrentPage || itemsPerPage!==deferredItemsPerPage) ? (
+              <LoadingSpinner />
+            ) : 
+              //  <React.Suspense fallback={<LoadingSpinner />}>
+                (users || []).map((userInfo) => (
+                  <UserCard
+                    key={userInfo.id}
+                    userInfo={userInfo}
+                    onCardClick={handleCardClick}
+                  ></UserCard>
+                ))}
+               {/* </React.Suspense> */}
+            
           </Box>
           <Pagination
             pageNumber={pageNumber}
-            currentPage={page}
+            currentPage={currentPage}
             setPage={setPage}
             itemsPerPage={itemsPerPage}
             setItemsPerPage={setItemsPerPage}
@@ -91,7 +97,9 @@ const UsersReview = () => {
         </Box>
       </Grid>
       <Grid item xs={12} md={4}>
-        {selectedUser && <UserPosts user={selectedUser} ref={postRef} />}
+        <React.Suspense fallback={<LoadingSpinner />}>
+          {selectedUser && <UserPosts user={selectedUser} ref={postRef} />}
+        </React.Suspense>
       </Grid>
     </Grid>
   );

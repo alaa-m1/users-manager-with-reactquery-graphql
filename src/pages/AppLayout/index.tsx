@@ -222,7 +222,7 @@ function AppLayout() {
           </Toolbar>
         </Container>
       </AppBar>
-      {isFetching ? <LoadingSpinner /> : null}
+      {/* {isFetching ? <LoadingSpinner /> : null} */}
       <main style={{ margin: "10px", position: "relative" }}>
         <Outlet />
       </main>

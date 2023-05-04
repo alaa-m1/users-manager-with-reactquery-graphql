@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import { forwardRef, useImperativeHandle, useRef, } from "react";
 import { User } from "shared/types";
 import { usePosts } from "pages/hooks";
 type UserPostsProps = {
@@ -8,7 +8,7 @@ type UserPostsProps = {
 
 const UserPosts = forwardRef(({ user }: UserPostsProps, ref) => {
   const boxRef = useRef<HTMLDivElement>(null);
-  const { data: posts, isLoading } = usePosts(user.id.toString());
+  const { data: posts } = usePosts(user.id.toString());
   useImperativeHandle(ref, () => {
     return {
       scrollUp: () => {

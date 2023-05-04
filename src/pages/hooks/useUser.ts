@@ -5,5 +5,5 @@ import { queryKeys } from "utils/reactQuery/queryKeys"
 
 export const useUser=(id: string)=>{
 
-    return useQuery<User, Error>([queryKeys.getUser, id], getUser)
+    return useQuery<User, Error>([queryKeys.getUser, id], getUser,{suspense: true})
 }

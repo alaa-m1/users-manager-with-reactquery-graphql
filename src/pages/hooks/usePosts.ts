@@ -6,6 +6,6 @@ import { queryKeys } from "utils/reactQuery/queryKeys";
 export const usePosts=(id: string)=>{
     return useQuery<Array<Post>, Error>(
         [queryKeys.getPosts, id],
-        () => getUserPosts(id)
+        () => getUserPosts(id),{suspense: true}
       );
 }

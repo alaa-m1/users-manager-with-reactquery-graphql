@@ -5,6 +5,7 @@ import { useInfiniteQuery } from "react-query";
 import InfiniteScroll from "react-infinite-scroller";
 import ProductsInfo from "./views/ProductsInfo";
 import { LoadingSpinner } from "shared";
+import React from "react";
 
 type ResponseType = {
   pages: Array<Page>;
@@ -22,16 +23,22 @@ type Product = {
 };
 const Products = () => {
   const theme = useTheme();
-  const { data, hasNextPage, fetchNextPage } = useInfiniteQuery<Page>(
-    queryKeys.getProducts,
-    ({ pageParam = productsUrl }) => getProducts(pageParam),
-    {
-      getNextPageParam: (lastPage, allPages) => lastPage.next,
-      getPreviousPageParam: (lastPage, allPages) => lastPage.previous,
-    }
-  );
+  const { data, hasNextPage, fetchNextPage, isLoading } =
+    useInfiniteQuery<Page>(
+      queryKeys.getProducts,
+      ({ pageParam = productsUrl }) => getProducts(pageParam),
+      {
+        getNextPageParam: (lastPage, allPages) => lastPage.next,
+        getPreviousPageParam: (lastPage, allPages) => lastPage.previous,
+      }
+    );
   return (
     <Box sx={{ margin: "10px 20px" }}>
+      {isLoading && (
+        <Box sx={{ position: "fixed", top: "50%", left: "50%" }}>
+          <LoadingSpinner />
+        </Box>
+      )}
       <Typography
         color={theme.palette.success.main}
         sx={{
