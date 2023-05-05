@@ -6,6 +6,9 @@ import UserPosts from "./views/UserPostes";
 import { useDebounce } from "shared/hooks";
 import { useUsers } from "pages/hooks";
 import React from "react";
+import { useQueryClient } from "react-query";
+import { queryKeys } from "utils/reactQuery/queryKeys";
+import { getUsers } from "actions";
 const postsNumber = 10; // This value should be taken from the backend (In the first response form the backend)
 
 const UsersReview = () => {
@@ -34,18 +37,18 @@ const UsersReview = () => {
   }, [deferredItemsPerPage, refetch]);
   //
 
-  //Pre-fetching
-  // const queryClient = useQueryClient();
-  // useEffect(() => {
-  //   if (deferredCurrentPage <= pageNumber) {
-  //     const nextPage = deferredCurrentPage + 1;
-  //     queryClient.prefetchQuery<Array<User>>(
-  //       [queryKeys.getUsers, nextPage],
-  //       () => getUsers(nextPage.toString(), deferredItemsPerPage.toString())
-  //     );
-  //   }
-  // }, [deferredItemsPerPage, deferredCurrentPage, pageNumber, queryClient]);
-  //
+  // Pre-fetching
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    if (deferredCurrentPage <= pageNumber) {
+      const nextPage = deferredCurrentPage + 1;
+      queryClient.prefetchQuery<Array<User>>(
+        [queryKeys.getUsers, nextPage],
+        () => getUsers(nextPage.toString(), deferredItemsPerPage.toString())
+      );
+    }
+  }, [deferredItemsPerPage, deferredCurrentPage, pageNumber, queryClient]);
+  
 
   const handleCardClick = (id: number) => {
     setSelectedUser((users || []).filter((item) => item.id === id)[0]);

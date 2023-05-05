@@ -5,8 +5,6 @@ import { useMutation } from "react-query";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useUser } from "pages/hooks";
-import React from "react";
-import { LoadingSpinner } from "shared";
 
 const UserProfile = () => {
   const { id } = useParams();
@@ -37,7 +35,6 @@ const UserProfile = () => {
         ":hover": { boxShadow: "6px 6px 10px #ccc" },
       }}
     >
-      <React.Suspense fallback={<LoadingSpinner />}>
         {!isError && (
           <>
             <Typography variant="h3" color="primary">
@@ -93,7 +90,6 @@ const UserProfile = () => {
             </Box>
           </>
         )}
-      </React.Suspense>
     </Box>
   );
 };

@@ -224,7 +224,9 @@ function AppLayout() {
       </AppBar>
       {/* {isFetching ? <LoadingSpinner /> : null} */}
       <main style={{ margin: "10px", position: "relative" }}>
-        <Outlet />
+        <React.Suspense fallback={<LoadingSpinner />}>
+          <Outlet />
+        </React.Suspense>
       </main>
     </>
   );
