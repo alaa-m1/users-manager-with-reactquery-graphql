@@ -1,5 +1,5 @@
 import { axiosInstance } from "utils/axiosInstance";
-export const getUsers = async (pageNumber: string, itemsPerPage: string) => {
+export const getUsersWithPagination = async (pageNumber: string, itemsPerPage: string) => {
   // using fetch
   // const response = await fetch(`https://jsonplaceholder.typicode.com/users?_limit=${itemsPerPage}&_page=${pageNumber}`, {
   //   headers: {
@@ -10,6 +10,14 @@ export const getUsers = async (pageNumber: string, itemsPerPage: string) => {
   // using axios
   const response = await axiosInstance.get(
     `/users?_limit=${itemsPerPage}&_page=${pageNumber}`
+  );
+  return response.data;
+};
+
+export const getUsers = async () => {
+
+  const response = await axiosInstance.get(
+    `/users`
   );
   return response.data;
 };

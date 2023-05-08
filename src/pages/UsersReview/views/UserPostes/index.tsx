@@ -1,14 +1,14 @@
 import { Box, Typography } from "@mui/material";
 import { forwardRef, useImperativeHandle, useRef, } from "react";
 import { User } from "shared/types";
-import { usePosts } from "pages/hooks";
+import { useUserPosts } from "pages/hooks";
 type UserPostsProps = {
   user: User;
 };
 
 const UserPosts = forwardRef(({ user }: UserPostsProps, ref) => {
   const boxRef = useRef<HTMLDivElement>(null);
-  const { data: posts } = usePosts(user.id.toString());
+  const { data: posts } = useUserPosts(user.id.toString());
   useImperativeHandle(ref, () => {
     return {
       scrollUp: () => {
@@ -40,7 +40,7 @@ const UserPosts = forwardRef(({ user }: UserPostsProps, ref) => {
         <Typography variant="h6">{`${user.name} posts:`}</Typography>
         <ul>
           {(posts || []).map((post) => (
-            <li key={post.id}>
+            <li key={post.id} style={{marginBottom:'5px'}}>
               <Typography
                 component="div"
                 color="info"

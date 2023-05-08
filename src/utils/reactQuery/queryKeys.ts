@@ -1,6 +1,7 @@
 export const queryKeys = {
-  getUsers: "users-query",
+  getUsersWithPagination: "users-query",
   getUser: "user-query",
+  getPostsByUser: "posts-query-by-user",
   getPosts: "posts-query",
   getPost: "post-query",
   getProducts:'products-query'

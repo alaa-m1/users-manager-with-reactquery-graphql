@@ -1,3 +1,3 @@
 export * from './useUsers';
 export * from './useUser';
-export * from './usePosts';
+export * from './useUserPosts';

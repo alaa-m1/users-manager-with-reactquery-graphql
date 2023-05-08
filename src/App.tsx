@@ -11,6 +11,7 @@ import Login from "pages/Login";
 import UserProfile from "pages/UsersReview/views/UserProfile";
 import Products from "pages/Products";
 import { ReactQueryProvider } from "utils/reactQuery/ReactQueryProvider";
+import PostsByUser from "pages/UsersReview/views/PostsByUser";
 
 function App() {
   return (
