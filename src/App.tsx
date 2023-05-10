@@ -1,25 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Suspense } from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import { Route, Routes } from "react-router-dom";
+import UsersReview from "./pages/UsersReview";
+import About from "./pages/About";
+import NotFound from "./pages/NotFound";
+import Welcome from "pages/Welcome";
+import { AppLayout } from "pages/AppLayout";
+import Login from "pages/Login";
+import UserProfile from "pages/UsersReview/views/UserProfile";
+import Products from "pages/Products";
+import { ReactQueryProvider } from "utils/reactQuery/ReactQueryProvider";
+import PostsByUser from "pages/UsersReview/views/PostsByUser";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ReactQueryProvider>
+      <Routes>
+        <Route path="/" element={<AppLayout />}>
+          <Route index element={<Welcome />} />
+          <Route path="/users">
+            <Route index element={<UsersReview />} />
+            <Route path=":id" element={<UserProfile />} />
+          </Route>
+          <Route path="/about" element={<About />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </ReactQueryProvider>
   );
 }
 
