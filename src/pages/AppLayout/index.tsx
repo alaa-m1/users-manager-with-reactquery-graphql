@@ -19,7 +19,7 @@ const links: Array<LinkInfo> = [
   { label: "Welcome", path: "/" },
   { label: "Users Review", path: "/users" },
   { label: "Products", path: "/products" },
-  { label: "About us", path: "/about" },
+  { label: "Employees (GraphQl)", path: "/employees" },
 ];
 const accountLinks: Array<LinkInfo> = [{ label: "Login", path: "/login" }];
 
@@ -106,23 +106,6 @@ function AppLayout() {
                 }}
                 open={Boolean(anchorElNavMenu)}
                 onClose={handleCloseNavMenu}
-                sx={{
-                  display: { xs: "block", md: "none" },
-                  ul: {
-                    padding: "0px",
-                    margin: "0px",
-                  },
-                  li: {
-                    padding: "0px",
-                    margin: "0px",
-                  },
-                  a: {
-                    display: "inline-block",
-                    width: "100%",
-                    height: "100%",
-                    padding: "10px 20px",
-                  },
-                }}
               >
                 {links.map((link, index) => (
                   <MenuItem key={index} onClick={handleCloseNavMenu}>

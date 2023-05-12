@@ -12,6 +12,9 @@ const StyledLink = styled(LinkComponent)`
   font-weight: ${(p) => (p.isactive === "active" ? "bold" : "normal")};
   text-decoration: none;
   padding: 0px 10px;
+  &:link {
+    color: purple;
+  }
 `;
 
 export { StyledLink };
