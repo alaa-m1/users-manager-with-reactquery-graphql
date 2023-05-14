@@ -54,8 +54,6 @@ const PostsByUserCard = () => {
     setSelectedUser((users || []).filter((item) => item.id === id)[0]);
     if (postRef.current) postRef.current?.scrollUp();
   };
-console.log(`currentPage=${currentPage}   deferredCurrentPage=${deferredCurrentPage}`)
-console.log(`itemsPerPage=${itemsPerPage}   deferredItemsPerPage=${deferredItemsPerPage}`)
   return (
     <Grid container sx={{ height: "85vh" }}>
       <Grid item xs={12} md={8}>

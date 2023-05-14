@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@apollo/client": "^3.7.14",
     "@emotion/styled": "^11.10.8",
     "@mui/icons-material": "^5.11.16",
     "@mui/lab": "^5.0.0-alpha.129",
@@ -16,7 +17,10 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.1",
     "axios": "^1.4.0",
+    "graphql": "^16.6.0",
+    "graphql-request": "^6.0.0",
     "lodash": "^4.17.21",
+    "mongoose": "^7.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.4",
@@ -34,7 +38,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "json-server": "cd ./servers/express-graphql-server && json-server --watch db.json",
+    "gql-server": "cd ./servers/express-graphql-server && nodemon server.js",
+    "mongo-server": "cd ./servers/express-mongodb-graphql-server && nodemon server.js",
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "eslintConfig": {
     "extends": [
@@ -55,8 +63,17 @@
     ]
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^3.3.1",
+    "@graphql-codegen/client-preset": "^3.0.1",
+    "@graphql-codegen/introspection": "3.0.1",
     "@types/lodash": "^4.14.194",
     "@types/react-infinite-scroller": "^1.2.3",
-    "@types/styled-components": "^5.1.26"
+    "@types/styled-components": "^5.1.26",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "graphql-http": "^1.18.0",
+    "json-server": "^0.17.3",
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1"
   }
 }
