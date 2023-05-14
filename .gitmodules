@@ -1,3 +1,6 @@
 [submodule "servers/express-graphql-server"]
 	path = servers/express-graphql-server
 	url = https://github.com/Alaa-M1/express-graphql-server.git
+[submodule "servers/express-mongodb-graphql-server"]
+	path = servers/express-mongodb-graphql-server
+	url = https://github.com/Alaa-M1/express-mongodb-graphql-server.git
