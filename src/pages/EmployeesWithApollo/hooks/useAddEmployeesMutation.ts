@@ -5,6 +5,9 @@ const ADD_EMPLOYEE_TO_DEPARTMENT = gql`
 mutation AddEmployeeToDepartment($departmentId:ID!, $firstName: String, $lastName: String, $address: String, $age: Int, $mobile: String) {
   addEmployeeToDepartment(departmentId: $departmentId, firstName: $firstName, lastName: $lastName, address: $address, age: $age, mobile: $mobile) {
     id
+    employees{
+      id
+    }
   }
 }
 `;

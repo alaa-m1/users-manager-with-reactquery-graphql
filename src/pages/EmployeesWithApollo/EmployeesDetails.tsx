@@ -11,6 +11,7 @@ import { useDeleteEmployeesMutation } from "./hooks/useDeleteEmployeesMutation";
 import DepartmenForm from "./DepartmenForm";
 import { useAddDepartmentMutation } from "./hooks/useAddDepartmentMutation";
 import { useDeleteDepartmentMutation } from "./hooks/useDeleteDepartmentMutation";
+import { toast } from "react-toastify";
 
 const initialQuery = `
 query{
@@ -69,26 +70,28 @@ const EmployeesDetails = () => {
         variables: {
           id: employeeData.id,
           firstName: (employeeData.name || " ").split(/\s+/)[0],
-          lastName: (employeeData.name || " ").split(/\s+/)[1],
+          lastName: (employeeData.name || " ").split(/\s+/).slice(1).join(" "),
           address: employeeData.address || "",
           age: parseInt(employeeData.age || "0"),
           mobile: employeeData.mobile || "",
         },
         refetchQueries: [{ query: GET_DEPARTMENTS_INFO }],
-      });
+      }).then(()=>toast.success('Update the selected employee successfully'));
     }
     if (type === "new") {
       addEmployeeMutation({
         variables: {
           departmentId: deptId,
           firstName: (employeeData.name || " ").split(/\s+/)[0],
-          lastName: (employeeData.name || " ").split(/\s+/)[1],
+          lastName: (employeeData.name || " ").split(/\s+/).slice(1).join(" "),
           address: employeeData.address || "",
           age: parseInt(employeeData.age || "0"),
           mobile: employeeData.mobile || "",
         },
-        refetchQueries: [{ query: GET_DEPARTMENTS_INFO }],
-      });
+        //refetchQueries: [{ query: GET_DEPARTMENTS_INFO }],
+        //// The UI will be updated by adding a config to the Apollo Client 
+        //// and by updating the adding query to return the id of the updated department and the ids of the department's employees
+      }).then(()=>toast.success('Add a new employee successfully'));
     }
     if (type === "delete") {
       deleteEmployeeMutation({
@@ -96,7 +99,7 @@ const EmployeesDetails = () => {
           id: employeeData.id,
         },
         refetchQueries: [{ query: GET_DEPARTMENTS_INFO }],
-      });
+      }).then(()=>toast.success('Delete the selected employee successfully'));
     }
   };
 
@@ -110,13 +113,13 @@ const EmployeesDetails = () => {
         description: deptInfo.description,
       },
       refetchQueries: [{ query: GET_DEPARTMENTS_INFO }],
-    });
+    }).then(()=>toast.success('Add a new department successfully'));
   };
   const handleDeleteDepartment = (id: string) => {
     deleteDepartmentMutation({
       variables: { id },
       refetchQueries: [{ query: GET_DEPARTMENTS_INFO }],
-    });
+    }).then(()=>toast.success('Delete the selected department successfully'));
   };
   return (
     <>
