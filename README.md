@@ -35,11 +35,10 @@ npm run gql-server
 
 First, create .env file in the  and add the following variable:
 ```bash
-MONGO_CLOUD_URL=
+MONGO_CLOUD_URL=mongodb+srv://<user-name>:<password>@g1.w0g0vec.mongodb.net/<database>
 ```
-You can use MongoDB cloud to create a new project and then to get the required URL
-https://www.mongodb.com/
-
+You can use MongoDB cloud to create a new project and then to get the required URL<br>
+https://www.mongodb.com/<br>
 
 To run Express GraphQL Server (The server will run by default on http://localhost:5001/graphql):
 ```bash
