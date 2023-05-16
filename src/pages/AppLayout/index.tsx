@@ -19,8 +19,8 @@ const links: Array<LinkInfo> = [
   { label: "Welcome", path: "/" },
   { label: "Users Review", path: "/users" },
   { label: "Products", path: "/products" },
-  { label: "Employees (GraphQL)", path: "/employees" },
-  { label: "Employees (Apollo GraphQL)", path: "/employees-apollo" },
+  { label: "Employees (GraphQL-ReactQuery)", path: "/employees" },
+  { label: "Employees (GraphQL-Apollo)", path: "/employees-apollo" },
 ];
 const accountLinks: Array<LinkInfo> = [{ label: "Login", path: "/login" }];
 

@@ -1,5 +1,5 @@
 import { Box, Button } from "@mui/material";
-import { EmployeeInfo } from "./types";
+import { EmployeeInfo } from "../types";
 import { useState } from "react";
 import _ from "lodash";
 
@@ -135,10 +135,9 @@ const EmployeeCard = ({
                 _.isEmpty(newEmpInfo.name) ||
                 (newEmpInfo.name || "")?.trim().split(/\s+/).length < 2
               }
-              onClick={() => {
-                handleAction("new", newEmpInfo, deptId);
-                setShowNewEmp && setShowNewEmp(false);
-              }}
+              onClick={() => 
+                handleAction("new", newEmpInfo, deptId)
+              }
             >
               Add
             </Button>

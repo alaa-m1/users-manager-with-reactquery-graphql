@@ -2,17 +2,20 @@ import React, { useMemo, useState } from "react";
 import { Box, Button, Grid, Typography, useTheme } from "@mui/material";
 import { gql } from "@apollo/client";
 import { EmployeeInfo } from "./types";
-import { LoadingSpinner } from "shared";
-import { useGetDepartmentsQuery } from "./hooks/useGetDepartmentsQuery";
-import EmployeeCard from "./EmployeeCard";
-import { useEditEmployeesMutation } from "./hooks/useEditEmployeesMutation";
-import { useAddEmployeesMutation } from "./hooks/useAddEmployeesMutation";
-import { useDeleteEmployeesMutation } from "./hooks/useDeleteEmployeesMutation";
-import DepartmenForm from "./DepartmenForm";
-import { useAddDepartmentMutation } from "./hooks/useAddDepartmentMutation";
-import { useDeleteDepartmentMutation } from "./hooks/useDeleteDepartmentMutation";
+import { GenericDialog, LoadingSpinner, useConfirmationDialog } from "shared";
+import { useGetDepartmentsQuery } from "./hooks";
+import EmployeeCard from "./components/EmployeeCard";
+import {
+  useAddEmployeesToDeptMutation,
+  useEditEmployeesMutation,
+  useDeleteEmployeesMutation,
+  useAddDepartmentMutation,
+  useDeleteDepartmentMutation,
+} from "./hooks";
+import DepartmenForm from "./components/DepartmenForm";
 import { toast } from "react-toastify";
-
+import CancelIcon from "@mui/icons-material/Cancel";
+import CheckCircle from "@mui/icons-material/CheckCircle";
 const initialQuery = `
 query{
   departments{ 
@@ -33,12 +36,15 @@ query{
 
 const EmployeesDetails = () => {
   const theme = useTheme();
-  const [value, setValue] = useState(initialQuery);
   const [query, setQuery] = useState(initialQuery);
   const [activeEmpIndex, setActiveEmpIndex] = useState([-1, -1]);
   const [activeDeptIndex, setActiveDeptIndex] = useState(-1);
   const [showdNewEmp, setShowNewEmp] = useState(false);
-  const [showdNewDept, setShowdNewDept] = useState(false);
+  const [showdNewDept, setShowNewDept] = useState(false);
+  const { confirm, ConfirmationDialog } = useConfirmationDialog(
+    "Delete Confirmation",
+    "Do you want to delete the selected record?"
+  );
   const GET_DEPARTMENTS_INFO = useMemo(
     () => gql`
       ${query}
@@ -47,20 +53,20 @@ const EmployeesDetails = () => {
   );
   const { loading, data, refetch } =
     useGetDepartmentsQuery(GET_DEPARTMENTS_INFO);
-  const handleExecuteQuery = () => {
-    setQuery(value);
-    refetch();
-  };
   const [
     editEmployeeMutation,
     { data: editData, loading: editLoading, error: editError },
   ] = useEditEmployeesMutation();
-  const [addEmployeeMutation] = useAddEmployeesMutation();
-  const [deleteEmployeeMutation] = useDeleteEmployeesMutation();
-  const [addDepartmentMutation] = useAddDepartmentMutation();
-  const [deleteDepartmentMutation] = useDeleteDepartmentMutation();
+  const [addEmployeeMutation, { loading: addEmpLoading }] =
+    useAddEmployeesToDeptMutation();
+  const [deleteEmployeeMutation, { loading: deleteEmpLoading }] =
+    useDeleteEmployeesMutation();
+  const [addDepartmentMutation, { loading: addDeptLoading }] =
+    useAddDepartmentMutation();
+  const [deleteDepartmentMutation, { loading: deleteDeptLoading }] =
+    useDeleteDepartmentMutation();
 
-  const handleAction = (
+  const handleAction = async (
     type: "delete" | "edit" | "new",
     employeeData: EmployeeInfo,
     deptId: string
@@ -75,8 +81,25 @@ const EmployeesDetails = () => {
           age: parseInt(employeeData.age || "0"),
           mobile: employeeData.mobile || "",
         },
-        refetchQueries: [{ query: GET_DEPARTMENTS_INFO }],
-      }).then(()=>toast.success('Update the selected employee successfully'));
+        optimisticResponse: {
+          __typename: "Mutation",
+          editEmployee: {
+            id: employeeData.id,
+            firstName: (employeeData.name || " ").split(/\s+/)[0],
+            lastName: (employeeData.name || " ")
+              .split(/\s+/)
+              .slice(1)
+              .join(" "),
+            address: employeeData.address || "",
+            mobile: employeeData.mobile || "",
+            age: parseInt(employeeData.age || "0"),
+            __typename: "EmployeeType",
+          },
+        },
+        // refetchQueries: [{ query: GET_DEPARTMENTS_INFO }],
+        //// The UI will be updated by adding a config to the Apollo Client
+        //// and by updating the adding query to return the data of the updated employee
+      }).then(() => toast.success("Update the selected employee successfully"));
     }
     if (type === "new") {
       addEmployeeMutation({
@@ -89,17 +112,25 @@ const EmployeesDetails = () => {
           mobile: employeeData.mobile || "",
         },
         //refetchQueries: [{ query: GET_DEPARTMENTS_INFO }],
-        //// The UI will be updated by adding a config to the Apollo Client 
+        //// The UI will be updated by adding a config to the Apollo Client
         //// and by updating the adding query to return the id of the updated department and the ids of the department's employees
-      }).then(()=>toast.success('Add a new employee successfully'));
+      }).then(() => {
+        toast.success("Add a new employee successfully");
+        setShowNewEmp(false);
+      });
     }
     if (type === "delete") {
-      deleteEmployeeMutation({
-        variables: {
-          id: employeeData.id,
-        },
-        refetchQueries: [{ query: GET_DEPARTMENTS_INFO }],
-      }).then(()=>toast.success('Delete the selected employee successfully'));
+      const confirmation = await confirm();
+      if (confirmation) {
+        deleteEmployeeMutation({
+          variables: {
+            id: employeeData.id,
+          },
+          refetchQueries: [{ query: GET_DEPARTMENTS_INFO }],
+        }).then(() =>
+          toast.success("Delete the selected employee successfully")
+        );
+      }
     }
   };
 
@@ -113,14 +144,23 @@ const EmployeesDetails = () => {
         description: deptInfo.description,
       },
       refetchQueries: [{ query: GET_DEPARTMENTS_INFO }],
-    }).then(()=>toast.success('Add a new department successfully'));
+    }).then(() => {
+      toast.success("Add a new department successfully");
+      setShowNewDept(false);
+    });
   };
-  const handleDeleteDepartment = (id: string) => {
-    deleteDepartmentMutation({
-      variables: { id },
-      refetchQueries: [{ query: GET_DEPARTMENTS_INFO }],
-    }).then(()=>toast.success('Delete the selected department successfully'));
+  const handleDeleteDepartment = async (id: string) => {
+    const confirmation = await confirm();
+    if (confirmation) {
+      deleteDepartmentMutation({
+        variables: { id },
+        refetchQueries: [{ query: GET_DEPARTMENTS_INFO }],
+      }).then(() =>
+        toast.success("Delete the selected department successfully")
+      );
+    }
   };
+
   return (
     <>
       <fieldset>
@@ -128,42 +168,44 @@ const EmployeesDetails = () => {
           To run this page: Execute the following command in the terminal window
         </legend>
         <Typography component="div" color={theme.palette.warning.main}>
-        First, create .env file and add the following variable: MONGO_CLOUD_URL=...
+          First, create .env file and add the following variable:
+          MONGO_CLOUD_URL=...
         </Typography>
         <Typography component="div" color={theme.palette.warning.main}>
           To start up Express MongoDB GraphQL Server: npm run mongo-server
         </Typography>
+        <Typography component="div" color={theme.palette.primary.main}>
+        useQuery , useMutation (Click on any employee card to edit or delete)
+        </Typography>
       </fieldset>
 
-      {loading && <LoadingSpinner floatingOver />}
+      {(loading ||
+        editLoading ||
+        addEmpLoading ||
+        deleteEmpLoading ||
+        addDeptLoading ||
+        deleteDeptLoading) && <LoadingSpinner floatingOver />}
       <Grid container mt={1} sx={{ input: { width: "250px" } }}>
         <Grid item xs={12} md={6} mb={2}>
+          <Typography
+            variant="h5"
+            color={theme.palette.info.main}
+            sx={{ textAlign: "center" }}
+          >
+            Get Departments Query:
+          </Typography>
           <Box
             sx={{
               mb: 1,
-              textarea: { height: "50vh", width: { xs: "95vw", md: "45vw" } },
+              textarea: { height: "80vh", width: { xs: "95vw", md: "45vw" } },
             }}
           >
             <textarea
               name="textarea-query"
               id="textarea-query"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
+              value={query}
+              readOnly
             ></textarea>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Button onClick={handleExecuteQuery} sx={{ marginRight: "10px" }}>
-              Execute Query
-            </Button>
-            <Button onClick={(e) => setValue(initialQuery)}>
-              Initial Query
-            </Button>
           </Box>
         </Grid>
         {data ? (
@@ -201,13 +243,6 @@ const EmployeesDetails = () => {
                   sx={{ textAlign: "center" }}
                 >
                   Mapped results:
-                </Typography>
-                <Typography
-                  variant="h6"
-                  color={theme.palette.info.main}
-                  sx={{ textAlign: "center" }}
-                >
-                  Click on any employee to edit
                 </Typography>
                 {data.departments.map((department, deptIndex) => {
                   const isActive = activeDeptIndex === deptIndex;
@@ -278,11 +313,11 @@ const EmployeesDetails = () => {
                 })}
                 {showdNewDept && (
                   <DepartmenForm
-                    setShowdNewDept={setShowdNewDept}
+                    setShowNewDept={setShowNewDept}
                     handleAddDepartment={handleAddDepartment}
                   />
                 )}
-                <Button onClick={() => setShowdNewDept(true)}>
+                <Button onClick={() => setShowNewDept(true)}>
                   Add department
                 </Button>
               </Box>
@@ -290,6 +325,7 @@ const EmployeesDetails = () => {
           </Grid>
         ) : null}
       </Grid>
+      <ConfirmationDialog />
     </>
   );
 };

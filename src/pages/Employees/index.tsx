@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, Button, Grid, Typography, useTheme } from "@mui/material";
-import { useEmployees } from "pages/hooks";
+import { useEmployees } from "./hooks";
 import { EmployeeInfo } from "./types";
 import { LoadingSpinner } from "shared";
 
@@ -33,13 +33,8 @@ query {
 `;
 const Employees = () => {
   const theme = useTheme();
-  const [value, setValue] = useState(initialQuery);
   const [query, setQuery] = useState(initialQuery);
   const { data, refetch, isLoading } = useEmployees(query);
-  const handleExecuteQuery = () => {
-    setQuery(value);
-    refetch();
-  };
   const EmployeeCard = ({
     employeeInfo,
     lastElement,
@@ -85,23 +80,9 @@ const Employees = () => {
             <textarea
               name="textarea-query"
               id="textarea-query"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
+              value={query}
+              readOnly
             ></textarea>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Button onClick={handleExecuteQuery} sx={{ marginRight: "10px" }}>
-              Execute Query
-            </Button>
-            <Button onClick={(e) => setValue(initialQuery)}>
-              Initial Query
-            </Button>
           </Box>
         </Grid>
         {data ? (

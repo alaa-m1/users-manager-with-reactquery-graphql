@@ -12,8 +12,8 @@ mutation AddEmployeeToDepartment($departmentId:ID!, $firstName: String, $lastNam
 }
 `;
 
-const useAddEmployeesMutation = (): MutationTuple<any, OperationVariables, DefaultContext, ApolloCache<any>> => {
+const useAddEmployeesToDeptMutation = (): MutationTuple<any, OperationVariables, DefaultContext, ApolloCache<any>> => {
   const mutationRes = useMutation(ADD_EMPLOYEE_TO_DEPARTMENT)
   return mutationRes
 }
-export { useAddEmployeesMutation }
+export { useAddEmployeesToDeptMutation }
