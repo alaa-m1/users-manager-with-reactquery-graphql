@@ -4,7 +4,7 @@ import { gql } from "@apollo/client";
 import { EmployeeInfo } from "./types";
 import { GenericDialog, LoadingSpinner, useConfirmationDialog } from "shared";
 import { useGetDepartmentsQuery } from "./hooks";
-import EmployeeCard from "./EmployeeCard";
+import EmployeeCard from "./components/EmployeeCard";
 import {
   useAddEmployeesToDeptMutation,
   useEditEmployeesMutation,
@@ -12,7 +12,7 @@ import {
   useAddDepartmentMutation,
   useDeleteDepartmentMutation,
 } from "./hooks";
-import DepartmenForm from "./DepartmenForm";
+import DepartmenForm from "./components/DepartmenForm";
 import { toast } from "react-toastify";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircle from "@mui/icons-material/CheckCircle";
@@ -173,6 +173,9 @@ const EmployeesDetails = () => {
         </Typography>
         <Typography component="div" color={theme.palette.warning.main}>
           To start up Express MongoDB GraphQL Server: npm run mongo-server
+        </Typography>
+        <Typography component="div" color={theme.palette.primary.main}>
+        useQuery , useMutation
         </Typography>
       </fieldset>
 

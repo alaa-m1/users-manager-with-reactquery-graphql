@@ -1,6 +1,6 @@
 import { Box, Button } from "@mui/material";
 import React, { useState } from "react";
-import { DepartmentInfo } from "./types";
+import { DepartmentInfo } from "../types";
 type DepartmentFormProps = {
   setShowNewDept: React.Dispatch<React.SetStateAction<boolean>>;
   handleAddDepartment: (handleAddDepartment: {

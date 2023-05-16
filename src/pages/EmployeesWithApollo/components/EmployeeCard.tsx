@@ -1,5 +1,5 @@
 import { Box, Button } from "@mui/material";
-import { EmployeeInfo } from "./types";
+import { EmployeeInfo } from "../types";
 import { useState } from "react";
 import _ from "lodash";
 
