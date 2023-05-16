@@ -175,7 +175,7 @@ const EmployeesDetails = () => {
           To start up Express MongoDB GraphQL Server: npm run mongo-server
         </Typography>
         <Typography component="div" color={theme.palette.primary.main}>
-        useQuery , useMutation
+        useQuery , useMutation (Click on any employee card to edit or delete)
         </Typography>
       </fieldset>
 
@@ -243,13 +243,6 @@ const EmployeesDetails = () => {
                   sx={{ textAlign: "center" }}
                 >
                   Mapped results:
-                </Typography>
-                <Typography
-                  variant="h6"
-                  color={theme.palette.info.main}
-                  sx={{ textAlign: "center" }}
-                >
-                  Click on any employee to edit
                 </Typography>
                 {data.departments.map((department, deptIndex) => {
                   const isActive = activeDeptIndex === deptIndex;
