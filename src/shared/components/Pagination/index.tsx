@@ -1,12 +1,5 @@
 import { Box, Button, Typography } from "@mui/material";
 
-type PaginationProps = {
-  currentPage: number;
-  pageNumber: number;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-  itemsPerPage: number;
-  setItemsPerPage: React.Dispatch<React.SetStateAction<number>>;
-};
 const Pagination = ({
   currentPage,
   pageNumber,
@@ -57,3 +50,11 @@ const Pagination = ({
 };
 
 export { Pagination };
+
+type PaginationProps = {
+  currentPage: number;
+  pageNumber: number;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  itemsPerPage: number;
+  setItemsPerPage: React.Dispatch<React.SetStateAction<number>>;
+};

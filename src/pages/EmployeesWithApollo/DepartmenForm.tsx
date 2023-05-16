@@ -2,14 +2,14 @@ import { Box, Button } from "@mui/material";
 import React, { useState } from "react";
 import { DepartmentInfo } from "./types";
 type DepartmentFormProps = {
-  setShowdNewDept: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowNewDept: React.Dispatch<React.SetStateAction<boolean>>;
   handleAddDepartment: (handleAddDepartment: {
     name: string;
     description: string;
   }) => void;
 };
 const DepartmenForm = ({
-  setShowdNewDept,
+  setShowNewDept,
   handleAddDepartment,
 }: DepartmentFormProps) => {
   const [departmentInfo, setDepartmentInfo] = useState<DepartmentInfo>({
@@ -26,7 +26,6 @@ const DepartmenForm = ({
       name: departmentInfo["name"].toString(),
       description: departmentInfo["description"].toString(),
     });
-    setShowdNewDept(false);
   };
   return (
     <Box sx={{ border: "1px solid #ccc", padding: "5px", margin: "5px 0px" }}>
@@ -56,7 +55,7 @@ const DepartmenForm = ({
         </label>
         <br />
         <Button type="submit">Save new Department</Button>
-        <Button onClick={() => setShowdNewDept(false)}>Cancel</Button>
+        <Button onClick={() => setShowNewDept(false)}>Cancel</Button>
       </form>
     </Box>
   );

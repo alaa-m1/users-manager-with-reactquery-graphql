@@ -135,10 +135,9 @@ const EmployeeCard = ({
                 _.isEmpty(newEmpInfo.name) ||
                 (newEmpInfo.name || "")?.trim().split(/\s+/).length < 2
               }
-              onClick={() => {
-                handleAction("new", newEmpInfo, deptId);
-                setShowNewEmp && setShowNewEmp(false);
-              }}
+              onClick={() => 
+                handleAction("new", newEmpInfo, deptId)
+              }
             >
               Add
             </Button>

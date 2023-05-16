@@ -5,6 +5,11 @@ const UPDATE_EMPLOYEE = gql`
 mutation ($id:ID!, $firstName: String, $lastName: String, $address: String, $age: Int, $mobile: String) {
   editEmployee(id: $id, firstName: $firstName, lastName: $lastName, address: $address, age: $age, mobile: $mobile) {
     id
+    firstName
+    lastName
+    address
+    mobile
+    age
   }
 }
 `;

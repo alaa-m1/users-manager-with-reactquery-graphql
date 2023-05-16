@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, Button, Grid, Typography, useTheme } from "@mui/material";
-import { useEmployees } from "pages/hooks";
+import { useEmployees } from "./hooks";
 import { EmployeeInfo } from "./types";
 import { LoadingSpinner } from "shared";
 

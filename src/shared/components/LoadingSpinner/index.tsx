@@ -4,7 +4,7 @@ import { GridLoader } from "react-spinners";
 const LoadingSpinner = ({ floatingOver }: { floatingOver?: boolean }) => {
   const floatingOverStyle: React.CSSProperties = floatingOver
     ? {
-        position: "absolute",
+        position: "fixed",
         left: "50vw",
         top: "50vh",
         transform: "translate(-50%,-50%)",

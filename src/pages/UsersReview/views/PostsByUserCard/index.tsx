@@ -2,7 +2,7 @@ import { Box, Grid } from "@mui/material";
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import { LoadingSpinner, Pagination, UserCard } from "shared";
 import { User } from "shared/types";
-import { useDebounce } from "shared/hooks";
+import { useDebounce } from "shared";
 import { useUsers } from "pages/hooks";
 import React from "react";
 import { useQueryClient } from "react-query";
