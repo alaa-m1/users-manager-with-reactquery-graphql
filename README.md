@@ -1,4 +1,4 @@
-### users-manager-with-reactquery-graphql
+# Users Manager with ReactQuery, Graphql
 Users manager with ReactQuery GraphQL
 
 ### Clone Project
