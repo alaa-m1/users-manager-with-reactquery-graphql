@@ -1,5 +1,6 @@
-# Users Manager with ReactQuery, Graphql
-Users manager with ReactQuery GraphQL
+# Users Manager: React, TypeScript, ReactQuery, @apollo/client, Graphql, Infinite scrolling, MUI
+
+## Available Scripts
 
 ### Clone Project
 
