@@ -8,8 +8,12 @@ import {
   DialogProps,
   IconButton,
   Button,
+  Paper,
   Box,
+  DialogContentText,
+  PaperProps,
 } from "@mui/material";
+import Draggable from "react-draggable";
 
 const GenericDialog = ({
   titleOptions,
@@ -20,19 +24,34 @@ const GenericDialog = ({
   ...props
 }: GenericDialogProps) => {
   const { confirmBtn, cancelBtn } = actionOptions;
+
+  const handleCancel = () => {
+    onClose?.()
+  };
+
   return (
     <Dialog
-      {...props}
+      maxWidth="xs"
+      scroll="paper"
+      aria-describedby="dialog-description"
+      aria-labelledby="draggable-dialog-title"
       sx={{ "& .MuiDialog-paper": { width: "60%", maxHeight: "50%" } }}
+      {...props}
+      PaperComponent={PaperComponent}
     >
-      <DialogTitle sx={{ display: "flex", justifyContent: "space-between" }}>
+      <DialogTitle
+        id="draggable-dialog-title"
+        sx={{ cursor: "move", display: "flex", justifyContent: "space-between" }}
+      >
         {titleOptions.title}
-        <IconButton component="span" onClick={() => onClose?.()}>
+        <IconButton aria-label="close" component="span"  onClick={handleCancel}>
           <Close />
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <div>{contentOptions.text}</div>
+        <DialogContentText id="dialog-description">
+          {contentOptions.text}
+        </DialogContentText>
         {contentOptions.content}
       </DialogContent>
       {(cancelBtn || confirmBtn) && (
@@ -73,4 +92,15 @@ type GenericDialogProps = DialogProps & {
   };
   onClose?: () => void;
   onConfirm?: () => void;
+};
+
+const PaperComponent = (props: PaperProps) => {
+  return (
+    <Draggable
+      handle="#draggable-dialog-title"
+      cancel={'[class*="MuiDialogContent-root"]'}
+    >
+      <Paper {...props} />
+    </Draggable>
+  );
 };
